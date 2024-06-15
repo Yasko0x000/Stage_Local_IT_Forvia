@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forvia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #weatherData {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .weather-item {
+            margin-bottom: 10px;
+        }
+        .weather-item label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Forvia</h1>
+        <input type="text" id="cityInput" placeholder="Enter city">
+        <button onclick="getWeather()">Get Weather</button>
+        <div id="weatherData"></div>
+    </div>
+
+    <script>
+        async function getWeather() {
+            const city = document.getElementById('cityInput').value;
+            const response = await fetch(`/weather?city=${city}`);
+            const data = await response.json();
+            const weatherDataDiv = document.getElementById('weatherData');
+            weatherDataDiv.innerHTML = '';
+            for (const [key, value] of Object.entries(data)) {
+                const weatherItemDiv = document.createElement('div');
+                weatherItemDiv.classList.add('weather-item');
+                const label = document.createElement('label');
+                label.textContent = key + ': ';
+                const text = document.createTextNode(formatValue(value));
+                weatherItemDiv.appendChild(label);
+                weatherItemDiv.appendChild(text);
+                weatherDataDiv.appendChild(weatherItemDiv);
+            }
+        }
+
+        function formatValue(value) {
+            if (typeof value === 'object') {
+                return JSON.stringify(value);
+            } else {
+                return value;
+            }
+        }
+    </script>
+</body>
+</html>
